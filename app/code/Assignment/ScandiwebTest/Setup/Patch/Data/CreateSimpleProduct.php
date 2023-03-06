@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace Assignment\ScandiwebTest\Setup\Patch\Data;
 
@@ -70,6 +71,16 @@ class CreateSimpleProduct implements DataPatchInterface
     protected array $sourceItems = [];
 
     /**
+     * @var CategoryLinkManagementInterface
+     */
+    private CategoryLinkManagementInterface $categoryLink;
+
+    /**
+     * @var CategoryCollectionFactory
+     */
+    private CategoryCollectionFactory $categoryCollectionFactory;
+
+    /**
      * Migration patch constructor.
      *
      * @param ProductInterfaceFactory $productInterfaceFactory
@@ -78,7 +89,7 @@ class CreateSimpleProduct implements DataPatchInterface
      * @param SourceItemsSaveInterface $sourceItemsSaveInterface
      * @param State $appState
      * @param StoreManagerInterface $storeManager
-		 * @param EavSetup $eavSetup
+     * @param EavSetup $eavSetup
      * @param CategoryCollectionFactory $categoryCollectionFactory
      */
     public function __construct(
@@ -87,19 +98,19 @@ class CreateSimpleProduct implements DataPatchInterface
         State $appState,
         StoreManagerInterface $storeManager,
         EavSetup $eavSetup,
-				SourceItemInterfaceFactory $sourceItemFactory,
+        SourceItemInterfaceFactory $sourceItemFactory,
         SourceItemsSaveInterface $sourceItemsSaveInterface,
-				CategoryLinkManagementInterface $categoryLink,
+        CategoryLinkManagementInterface $categoryLink,
         CategoryCollectionFactory $categoryCollectionFactory
     ) {
         $this->appState = $appState;
         $this->productInterfaceFactory = $productInterfaceFactory;
         $this->productRepository = $productRepository;
-				$this->eavSetup = $eavSetup;
+        $this->eavSetup = $eavSetup;
         $this->storeManager = $storeManager;
         $this->sourceItemFactory = $sourceItemFactory;
         $this->sourceItemsSaveInterface = $sourceItemsSaveInterface;
-				$this->categoryLink = $categoryLink;
+        $this->categoryLink = $categoryLink;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
     }
 
@@ -130,11 +141,11 @@ class CreateSimpleProduct implements DataPatchInterface
 
         $websiteIDs = [$this->storeManager->getStore()->getWebsiteId()];
 
-				$product->setTypeId(Type::TYPE_SIMPLE)
+        $product->setTypeId(Type::TYPE_SIMPLE)
             ->setWebsiteIds($websiteIDs)
             ->setAttributeSetId($attributeSetId)
             ->setName('Grip Trainer')
-						->setUrlKey('griptrainer')
+            ->setUrlKey('griptrainer')
             ->setSku('grip-trainer')
             ->setPrice(9.99)
             ->setVisibility(Visibility::VISIBILITY_BOTH)
@@ -157,7 +168,7 @@ class CreateSimpleProduct implements DataPatchInterface
             ->addAttributeToFilter('name', ['in' => $categoryTitles])
             ->getAllIds();
 
-	      $this->categoryLink->assignProductToCategories($product->getSku(), $categoryIds);
+        $this->categoryLink->assignProductToCategories($product->getSku(), $categoryIds);
     }
 
     /**
